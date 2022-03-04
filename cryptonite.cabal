@@ -189,6 +189,7 @@ Library
                      Crypto.Random.Entropy.Unsafe
                      Crypto.System.CPU
                      Crypto.Tutorial
+                     Crypto.PubKey.ElGamal
   Other-modules:     Crypto.Cipher.AES.Primitive
                      Crypto.Cipher.Blowfish.Box
                      Crypto.Cipher.Blowfish.Primitive
@@ -233,7 +234,6 @@ Library
                      Crypto.Random.SystemDRG
                      Crypto.Random.Probabilistic
                      Crypto.PubKey.Internal
-                     Crypto.PubKey.ElGamal
                      Crypto.ECC.Simple.Types
                      Crypto.ECC.Simple.Prim
                      Crypto.Internal.Builder
