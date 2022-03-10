@@ -26,6 +26,7 @@ module Crypto.PubKey.ElGamal
     , encryptWith
     , encrypt
     , decrypt
+    , reRandomize
     -- * Signature primitives
     , signWith
     , sign
@@ -83,6 +84,17 @@ encryptWith (EphemeralKey b) (Params p g _) (PublicNumber h) m = (c1,c2)
 encrypt :: MonadRandom m => Params -> PublicNumber -> Integer -> m (Integer,Integer)
 encrypt params@(Params p _ _) public m = (\b -> encryptWith b params public m) <$> generateEphemeral q
     where q = p-1 -- p is prime, hence order of the group is p-1
+
+reRandomizeWith :: EphemeralKey -> Params -> PublicNumber -> (Integer, Integer) -> (Integer, Integer, Integer)
+reRandomizeWith (EphemeralKey b) (Params p g _) (PublicNumber h) (c1,c2) = (d1,d2,b)
+    where s1  = expSafe g b p
+          s2  = expSafe h b p
+          d1 = (s1 * c1) `mod` p
+          d2 = (s2 * c2) `mod` p
+-- | Re-randomize an encrypted message with a new ephemeral key. 
+reRandomize :: MonadRandom m => Params -> PublicNumber -> (Integer, Integer) -> m (Integer, Integer, Integer)
+reRandomize params@(Params p g _) public m = (\b -> reRandomizeWith b params public m) <$> generateEphemeral q
+    where q = p-1 -- p is prime, hence order of the group is p-1  
 
 -- | decrypt message
 decrypt :: Params -> PrivateNumber -> (Integer, Integer) -> Integer
